@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<!-- bean definitions here -->
+	<context:component-scan base-package="cn.jxufe" />
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/pages/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<bean id="resolver" class="cn.jxufe.web.controller.WeiXinHttpResolver">
+		<property name="requestPoJoMap">
+		    <map>
+		        <entry key="text" value-ref="textRequest" />
+<!-- 				<entry key="image" value-ref="imageRequest" /> -->
+<!-- 				<entry key="voice" value-ref="voiceRequest" /> -->
+<!-- 				<entry key="video" value-ref="videoRequest" /> -->
+<!-- 				<entry key="music" value-ref="musicRequest" /> -->
+<!-- 				<entry key="news" value-ref="newsRequest" /> -->
+		    </map>
+		</property>
+		<property name="responsePoJoMap">
+		    <map>
+		        <entry key="text" value-ref="textResponse" />
+<!-- 				<entry key="image" value-ref="imageResponse" /> -->
+<!-- 				<entry key="voice" value-ref="voiceResponse" /> -->
+<!-- 				<entry key="video" value-ref="videoResponse" /> -->
+<!-- 				<entry key="music" value-ref="musicResponse" /> -->
+<!-- 				<entry key="news" value-ref="newsResponse" /> -->
+		    </map>
+		</property>
+		<property name="executeMap">
+		    <map>
+		        <entry key="text" value-ref="textAction" />
+<!-- 				<entry key="image" value-ref="imageAction" /> -->
+<!-- 				<entry key="voice" value-ref="voiceAction" /> -->
+<!-- 				<entry key="video" value-ref="videoAction" /> -->
+<!-- 				<entry key="music" value-ref="musicAction" /> -->
+<!-- 				<entry key="news" value-ref="newsAction" /> -->
+		    </map>
+		</property>
+	</bean>
+	<bean id="textResponse" class="cn.jxufe.web.pojo.WeixinTextMsgResponse">
+	</bean>
+<!-- 	<bean id="imageResponse" class="cn.jxufe.web.pojo.WeixinImageMsgResponse"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="voiceResponse" class="cn.jxufe.web.pojo.WeixinVoiceMsgResponse"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="videoResponse" class="cn.jxufe.web.pojo.WeixinVideoMsgResponse"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="musicResponse" class="cn.jxufe.web.pojo.WeixinMusicMsgResponse"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="newsResponse" class="cn.jxufe.web.pojo.WeixinNewsMsgResponse"> -->
+<!-- 	</bean> -->
+
+	<bean id="textRequest" class="cn.jxufe.web.pojo.WeixinTextMsgRequest">
+	</bean>
+<!-- 	<bean id="imageRequest" class="cn.jxufe.web.pojo.WeixinImageMsgRequest"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="voiceRequest" class="cn.jxufe.web.pojo.WeixinVoiceMsgRequest"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="videoRequest" class="cn.jxufe.web.pojo.WeixinVideoMsgRequest"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="musicRequest" class="cn.jxufe.web.pojo.WeixinMusicMsgRequest"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="newsRequest" class="cn.jxufe.web.pojo.WeixinNewsMsgRequest"> -->
+<!-- 	</bean> -->
+	<bean id="textAction" class="cn.jxufe.web.action.WeixinTextMsgAction">
+	</bean>
+<!-- 	<bean id="imageAction" class="cn.jxufe.web.action.WeixinImageMsgAction"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="voiceAction" class="cn.jxufe.web.action.WeixinVoiceMsgAction"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="videoAction" class="cn.jxufe.web.action.WeixinVideoMsgAction"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="musicAction" class="cn.jxufe.web.action.WeixinMusicMsgAction"> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="newsAction" class="cn.jxufe.web.action.WeixinNewsMsgAction"> -->
+<!-- 	</bean> -->
+
+	<!-- 配置读取外部配置文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" p:driverClassName="${jdbc.driverClassName}"
+		p:url="${jdbc.url}" p:username="${jdbc.username}" p:password="${jdbc.password}" />
+	<context:annotation-config /> <!-- 此行语句使得resource autowired 等四个注解可以使用 -->
+	
+	<!-- 实例化jdbcTemplate,同时注入数据源 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource" />
+	
+	<!-- 配置事务管理器 -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 事务扫描开始(开启@Tranctional) -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>

@@ -20,6 +20,9 @@ public class BaseWeixinPlatformResponse implements Serializable{
 	private String CreateTime;
 	private String MsgType;
 	public BaseWeixinPlatformResponse(){
+		this.ToUserName = "";
+        this.FromUserName = "";
+        this.CreateTime = String.valueOf(System.currentTimeMillis());
 	}
 	public BaseWeixinPlatformResponse(BaseWeixinPlatformRequest requestPojo) {
 		this.ToUserName = requestPojo.getFromUserName();
